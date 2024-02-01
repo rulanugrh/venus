@@ -12,6 +12,7 @@ type App struct {
 		Host string
 		Port string
 		Origin string
+		Secret string
 	}
 	Admin struct {
 		Email    string
@@ -53,6 +54,8 @@ func initConfig() *App {
 	conf.Admin.Password = os.Getenv("ADMIN_PASSWORD")
 	conf.Server.Host = os.Getenv("SERVER_HOST")
 	conf.Server.Port = os.Getenv("SERVER_PORT")
+	conf.Server.Origin = os.Getenv("SERVER_ORIGIN")
+	conf.Server.Secret = os.Getenv("SERVER_SECRET")
 
 	return &conf
 }
