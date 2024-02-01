@@ -25,7 +25,7 @@ func main() {
 			fiber.MethodDelete,
 			fiber.MethodPost,
 		}, ","),
-		AllowHeaders: "Origin, Content-Type, Acceptt",
+		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
 	containerService := service.NewContainerService(conn)
