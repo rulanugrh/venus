@@ -8,86 +8,42 @@ import (
 	iservice "github.com/rulanugrh/venus/internal/service/port"
 )
 
-type containerstruct struct {
-	service iservice.ContainerInterface
+type imagestruct struct {
+	service iservice.ImageInterface
 }
 
-func NewContainerHandler(service iservice.ContainerInterface) ihttp.ContainerInterface {
-	return &containerstruct{
+func NewImageHandler(service iservice.ImageInterface) ihttp.ImageInterface {
+	return &imagestruct{
 		service: service,
 	}
 }
 
-func(container *containerstruct) CreateContainer(ctx *fiber.Ctx) error {
-	var model dto.Container
+func(image *imagestruct) PullImage(ctx *fiber.Ctx) error {
+	var model dto.Image
 	err := ctx.BodyParser(model)
-	if err != nil {
+	if err != nil  {
 		response := web.Failure{
+			Message: "Tidak bisa membaca request",
 			Code: 500,
-			Message: "Tidak bisa binding",
 			Error: err,
 		}
 
 		return ctx.Status(500).JSON(response)
 	}
 
-	data, errCreate := container.service.Create(model, ctx.Context())
+	errCreate := image.service.PullImage(model)
 	if errCreate != nil {
 		response := web.Failure{
+			Message: "Tidak bisa pull image",
 			Code: 500,
-			Message: "Tidak bisa request create container",
-			Error: errCreate,
+			Error: err,
 		}
 
 		return ctx.Status(500).JSON(response)
 	}
 
 	response := web.Success{
-		Code: 200,
-		Message: "Success create container",
-		Data: data,
-	}
-
-	return ctx.Status(200).JSON(response)
-	
-}
-
-func(container *containerstruct) ListContainer(ctx *fiber.Ctx) error {
-	data, err := container.service.ListContainer()
-	if err != nil {
-		response := web.Failure{
-			Code: 400,
-			Message: "Container tidak ditemukan",
-			Error: err,
-		}
-
-		return ctx.Status(400).JSON(response)
-	}
-
-	response := web.Success{
-		Code: 200,
-		Message: "Container ditemukan",
-		Data: data,
-	}
-
-	return ctx.Status(200).JSON(response)
-}
-
-func(container *containerstruct) DeleteContainer(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
-	err := container.service.DeleteContaienr(id, ctx.Context())
-	if err != nil {
-		response := web.Failure{
-			Code: 400,
-			Message: "Gagal delete container",
-			Error: err,
-		}
-
-		return ctx.Status(400).JSON(response)
-	}
-
-	response := web.Success{
-		Message: "Container berhasil dihapus",
+		Message: "Berhasil pull image",
 		Code: 200,
 		Data: nil,
 	}
@@ -95,14 +51,12 @@ func(container *containerstruct) DeleteContainer(ctx *fiber.Ctx) error {
 	return ctx.Status(200).JSON(response)
 }
 
-func(container *containerstruct) InspectContainer(ctx *fiber.Ctx) error {
-	id := ctx.Params("id")
-	data, err := container.service.InspectContainer(id)
-
+func(image *imagestruct) ListImage(ctx *fiber.Ctx) error {
+	data, err := image.service.ListImage()
 	if err != nil {
 		response := web.Failure{
 			Code: 400,
-			Message: "Gagal inspect container dengan id ini",
+			Message: "Image tidak ditemukan",
 			Error: err,
 		}
 
@@ -111,7 +65,53 @@ func(container *containerstruct) InspectContainer(ctx *fiber.Ctx) error {
 
 	response := web.Success{
 		Code: 200,
-		Message: "Container ditemukan",
+		Message: "Image ditemukan",
+		Data: data,
+	}
+
+	return ctx.Status(200).JSON(response)
+}
+
+func(image *imagestruct) DeleteImage(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	err := image.service.DeleteImage(id)
+
+	if err != nil {
+		response := web.Failure{
+			Code: 500,
+			Message: "Image tidak berhasil dihapus",
+			Error: err,
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	response := web.Success{
+		Code: 200,
+		Message: "Image berhasil dihapus",
+		Data: nil,
+	}
+
+	return ctx.Status(200).JSON(response)
+}
+
+func(image *imagestruct) InspectImage(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	data, err := image.service.InspectImage(id)
+
+	if err != nil {
+		response := web.Failure{
+			Code: 400,
+			Message: "Image tidak ditemukan",
+			Error: err,
+		}
+
+		return ctx.Status(400).JSON(response)
+	}
+
+	response := web.Success{
+		Code: 200,
+		Message: "Image berhasil ditemukan",
 		Data: data,
 	}
 
