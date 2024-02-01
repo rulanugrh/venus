@@ -1,6 +1,10 @@
 package dao
 
-import "time"
+import (
+	"time"
+
+	docker "github.com/fsouza/go-dockerclient"
+)
 
 type Port struct {
 	PrivatePort int64  `json:"private_port"`
@@ -15,7 +19,7 @@ type Config struct {
 	Tty        bool                `json:"tty"`
 	OpenStdin  bool                `json:"bool"`
 	Env        []string            `json:"env"`
-	Port       map[string]struct{} `json:"port"`
+	Port       map[docker.Port]struct{} `json:"port"`
 }
 
 type Container struct {
@@ -48,5 +52,5 @@ type InspectContainer struct {
 	Tty          bool                `json:"tty"`
 	OpenStdin    bool                `json:"bool"`
 	Env          []string            `json:"env"`
-	Port         map[string]struct{} `json:"port"`
+	Port         map[docker.Port]struct{} `json:"port"`
 }
