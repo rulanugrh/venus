@@ -34,8 +34,12 @@ func main() {
 	imageService := service.NewImageService(conn)
 	imageHandler := handler.NewImageHandler(imageService)
 
+	userService := service.NewUserService(*conf)
+	userHandler := handler.NewUserHandler(userService)
+
 	routes.RouteContainer(f, containerHandler)
 	routes.RouteImage(f, imageHandler)
+	routes.RouteUser(f, userHandler)
 
 	server := fmt.Sprintf("%s:%s", conf.Server.Host, conf.Server.Port)
 	log.Fatal(f.Listen(server))
