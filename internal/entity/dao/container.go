@@ -1,12 +1,13 @@
 package dao
 
+import "time"
+
 type Port struct {
 	PrivatePort int64  `json:"private_port"`
 	PublicPort  int64  `json:"public_port"`
 	Type        string `json:"type"`
 	IP          string `json:"ip"`
 }
-
 type Config struct {
 	Hostname   string              `json:"hostname,omitempty"`
 	Domainname string              `json:"domain_name,omitempty"`
@@ -18,9 +19,14 @@ type Config struct {
 }
 
 type Container struct {
-	Name     string  `json:"name"`
-	Platform string  `json:"platform"`
-	Config   *Config `json:"config"`
+	ID           string    `json:"id"`
+	Name         string    `json:"name"`
+	Image        string    `json:"image"`
+	Created      time.Time `json:"created"`
+	Path         string    `json:"path"`
+	HostnamePath string    `json:"hostname_path"`
+	HostsPath    string    `json:"host_path"`
+	Config       *Config   `json:"config"`
 }
 
 type ListContainer struct {
