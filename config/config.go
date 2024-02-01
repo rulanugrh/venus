@@ -11,6 +11,7 @@ type App struct {
 	Server struct {
 		Host string
 		Port string
+		Origin string
 	}
 	Admin struct {
 		Email    string

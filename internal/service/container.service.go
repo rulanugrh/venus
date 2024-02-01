@@ -14,7 +14,7 @@ type containerstruct struct {
 	client *docker.Client
 }
 
-func NewDockerService(client *docker.Client) iservice.ContainerInterface {
+func NewContainerService(client *docker.Client) iservice.ContainerInterface {
 	return &containerstruct{
 		client: client,
 	}
