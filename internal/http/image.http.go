@@ -27,7 +27,6 @@ func(image *imagestruct) PullImage(ctx *fiber.Ctx) error {
 			Code: 500,
 			Error: err,
 		}
-
 		return ctx.Status(500).JSON(response)
 	}
 
@@ -113,6 +112,54 @@ func(image *imagestruct) InspectImage(ctx *fiber.Ctx) error {
 		Code: 200,
 		Message: "Image berhasil ditemukan",
 		Data: data,
+	}
+
+	return ctx.Status(200).JSON(response)
+}
+
+func (image *imagestruct) BuildImage(ctx *fiber.Ctx) error {
+	var model dto.BuildImage
+	dockerfile, err := ctx.FormFile("file")
+	if err != nil {
+		response := web.Failure{
+			Message: "Gagal binding form",
+			Error: err.Error(),
+			Code: 500,
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	model.Dockerfile = dockerfile.Filename
+	model.InputStream = ctx.Context().RequestBodyStream()
+	model.OutputStream = ctx.Context().Response.BodyWriter()
+	
+	err = ctx.BodyParser(&model)
+	if err != nil {
+		response := web.Failure{
+			Message: "Gagal binding body",
+			Error: err.Error(),
+			Code: 500,
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	errBuild := image.service.BuildImage(model)
+	if errBuild != nil {
+		response := web.Failure{
+			Message: "Gagal build image",
+			Error: errBuild.Error(),
+			Code: 500,
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	response := web.Success{
+		Code: 200,
+		Message: "Berhasil build image",
+		Data: model.Name,
 	}
 
 	return ctx.Status(200).JSON(response)

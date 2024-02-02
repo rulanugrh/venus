@@ -104,3 +104,27 @@ func(image *imagestruct) DeleteImage(id string) error {
 
 	return nil
 }
+
+func (image *imagestruct) BuildImage(model dto.BuildImage) error {
+	err := image.client.BuildImage(docker.BuildImageOptions{
+		Dockerfile: model.Dockerfile,
+		Name: model.Name,
+		Remote: model.Remote,
+		InputStream: model.InputStream,
+		OutputStream: model.OutputStream,
+		Labels: model.Labels,
+		Auth: docker.AuthConfiguration{
+			Username: model.Username,
+			Email: model.Email,
+			Password: model.Password,
+		},
+	})
+
+	if err != nil {
+		return web.Error{
+			Message: err.Error(),
+			Code: 500,
+		}
+	}
+	return nil
+}

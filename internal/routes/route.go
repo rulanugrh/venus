@@ -17,6 +17,7 @@ func RouteContainer(f fiber.Router, handler ihttp.ContainerInterface) {
 func RouteImage(f fiber.Router, handler ihttp.ImageInterface) {
 	route := f.Group("/api/image", middleware.JWTVerify())
 	route.Post("/create", handler.PullImage)
+	route.Post("/build", handler.BuildImage)
 	route.Get("/find", handler.ListImage)
 	route.Get("/find/:id", handler.InspectImage)
 	route.Get("/delete/:id", handler.DeleteImage)

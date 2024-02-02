@@ -10,4 +10,5 @@ type ImageInterface interface {
 	ListImage() ([]dao.Image, error)
 	InspectImage(id string) (*dao.InspectImage, error)
 	DeleteImage(id string) error
+	BuildImage(model dto.BuildImage) error
 }

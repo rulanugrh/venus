@@ -7,4 +7,5 @@ type ImageInterface interface {
 	ListImage(ctx *fiber.Ctx) error
 	DeleteImage(ctx *fiber.Ctx) error
 	InspectImage(ctx *fiber.Ctx) error
+	BuildImage(ctx *fiber.Ctx) error
 }
