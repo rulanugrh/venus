@@ -28,8 +28,7 @@ func RouteNetwork(f fiber.Router, handler ihttp.NetworkInterface) {
 	route.Post("/create", handler.CreateNetwork)
 	route.Get("/find/:id", handler.InspectNetwork)
 	route.Get("/find", handler.ListNetworks)
-	route.Get("/delete/:id", handler.DeleteNetwork)
-
+	route.Delete("/delete/:id", handler.DeleteNetwork)
 }
 
 func RouteUser(f fiber.Router, handler ihttp.UserInterface) {
