@@ -80,13 +80,35 @@ func (network *networkstruct) ListNetworks(ctx *fiber.Ctx) error {
 			Error:   err.Error(),
 		}
 
-		return ctx.Status(400).JSON(response)
+		return ctx.Status(500).JSON(response)
 	}
 
 	response := web.Success{
 		Message: "Network ditemukan",
 		Code:    200,
 		Data:    data,
+	}
+
+	return ctx.Status(200).JSON(response)
+}
+
+func (network *networkstruct) DeleteNetwork(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	err := network.service.DeleteNetwork(id)
+	if err != nil {
+		response := web.Failure{
+			Message: "Gagal delete network",
+			Code:    500,
+			Error:   err.Error(),
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	response := web.Success{
+		Message: "Network berhasil dihapus",
+		Code:    200,
+		Data:    nil,
 	}
 
 	return ctx.Status(200).JSON(response)

@@ -93,3 +93,15 @@ func (network *servicestruct) ListNetworks() ([]dao.Network, error) {
 
 	return response, nil
 }
+
+func (network *servicestruct) DeleteNetwork(id string) error {
+	err := network.client.RemoveNetwork(id)
+	if err != nil {
+		return web.Error{
+			Message: err.Error(),
+			Code:    500,
+		}
+	}
+
+	return nil
+}
