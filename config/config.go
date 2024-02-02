@@ -3,7 +3,6 @@ package config
 import (
 	"os"
 
-	docker "github.com/fsouza/go-dockerclient"
 	"github.com/joho/godotenv"
 )
 
@@ -22,14 +21,6 @@ type App struct {
 
 var app *App
 
-func GetClient() *docker.Client {
-	client, err := docker.NewClientFromEnv()
-	if err != nil {
-		return nil
-	}
-
-	return client
-}
 
 func GetConfig() *App {
 	if app == nil {

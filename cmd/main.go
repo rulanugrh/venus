@@ -11,11 +11,12 @@ import (
 	handler "github.com/rulanugrh/venus/internal/http"
 	"github.com/rulanugrh/venus/internal/routes"
 	"github.com/rulanugrh/venus/internal/service"
+	"github.com/rulanugrh/venus/util"
 )
 
 func main() {
 	conf := config.GetConfig()
-	conn := config.GetClient()
+	conn := util.GetClient()
 
 	f := fiber.New()
 	f.Use(cors.New(cors.Config{
