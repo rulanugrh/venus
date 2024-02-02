@@ -43,6 +43,19 @@ func(container *containerstruct) Create(req dto.Container, ctx context.Context) 
 		}
 	}
 
+	errs := container.client.StartContainer(data.ID, &docker.HostConfig{
+		Binds: req.HostConfig.Binds,
+		PortBindings: req.HostConfig.PortBinding,
+		NetworkMode: req.HostConfig.NetworkMode,
+	})
+
+	if errs != nil {
+		return nil, web.Error{
+			Message: errs.Error(),
+			Code: 400,
+		}
+	}
+
 	response := dao.Container{
 		ID: data.ID,
 		Image: data.Image,
