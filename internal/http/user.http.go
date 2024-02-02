@@ -21,12 +21,12 @@ func NewUserHandler(service iservice.UserInterface) ihttp.UserInterface{
 
 func(user *userstruct) Login(ctx *fiber.Ctx) error {
 	var model dto.User
-	err := ctx.BodyParser(model)
+	err := ctx.BodyParser(&model)
 	if err != nil {
 		response := web.Failure{
 			Code: 500,
 			Message: "Gagal binding request",
-			Error: err,
+			Error: err.Error(),
 		}
 
 		return ctx.Status(500).JSON(response)

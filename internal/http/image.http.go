@@ -20,7 +20,7 @@ func NewImageHandler(service iservice.ImageInterface) ihttp.ImageInterface {
 
 func(image *imagestruct) PullImage(ctx *fiber.Ctx) error {
 	var model dto.Image
-	err := ctx.BodyParser(model)
+	err := ctx.BodyParser(&model)
 	if err != nil  {
 		response := web.Failure{
 			Message: "Tidak bisa membaca request",

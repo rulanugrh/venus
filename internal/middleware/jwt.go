@@ -18,10 +18,8 @@ type jwtclaims struct {
 func JWTVerify() fiber.Handler {
 	conf := config.GetConfig()
 	return jwtware.New(jwtware.Config{
-		SigningKey: jwtware.SigningKey{
-			Key: []byte(conf.Server.Secret), 
-			JWTAlg: jwtware.HS256,
-		},
+		TokenLookup: "header:Authorization",
+		SigningKey: jwtware.SigningKey{Key: []byte(conf.Server.Secret)},
 	})
 }
 
@@ -35,7 +33,7 @@ func CreateToken(req dto.User) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString([]byte(conf.Server.Origin))
+	tokenString, err := token.SignedString([]byte(conf.Server.Secret))
 	if err != nil {
 		return "", web.Error{
 			Message: err.Error(),

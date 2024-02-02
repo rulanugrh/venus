@@ -3,7 +3,7 @@ package web
 type Failure struct {
 	Code    int
 	Message string
-	Error   error
+	Error   interface{}
 }
 
 type Success struct {

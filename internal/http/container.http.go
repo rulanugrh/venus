@@ -20,7 +20,7 @@ func NewContainerHandler(service iservice.ContainerInterface) ihttp.ContainerInt
 
 func(container *containerstruct) CreateContainer(ctx *fiber.Ctx) error {
 	var model dto.Container
-	err := ctx.BodyParser(model)
+	err := ctx.BodyParser(&model)
 	if err != nil {
 		response := web.Failure{
 			Code: 500,

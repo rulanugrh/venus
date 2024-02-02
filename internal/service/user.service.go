@@ -7,7 +7,6 @@ import (
 	"github.com/rulanugrh/venus/internal/entity/web"
 	"github.com/rulanugrh/venus/internal/middleware"
 	iservice "github.com/rulanugrh/venus/internal/service/port"
-	"golang.org/x/crypto/bcrypt"
 )
 
 type userstruct struct {
@@ -38,8 +37,7 @@ func(user *userstruct) Login(req dto.User) error {
 		}
 	}
 
-	matchedPassword := bcrypt.CompareHashAndPassword([]byte(user.conf.Admin.Password), []byte(req.Password))
-	if matchedPassword != nil {
+	if req.Password != user.conf.Admin.Password {
 		return web.Error{
 			Message: "Password tidak cocok",
 			Code: 401,
