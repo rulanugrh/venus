@@ -17,14 +17,14 @@ func NewNetworkHandler(service iservice.NetworkInterface) ihttp.NetworkInterface
 		service: service,
 	}
 }
-func(network *networkstruct) CreateNetwork(ctx *fiber.Ctx) error {
+func (network *networkstruct) CreateNetwork(ctx *fiber.Ctx) error {
 	var model dto.Network
 	err := ctx.BodyParser(&model)
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal binding body",
-			Code: 500,
-			Error: err.Error(),
+			Code:    500,
+			Error:   err.Error(),
 		}
 
 		return ctx.Status(500).JSON(response)
@@ -33,8 +33,8 @@ func(network *networkstruct) CreateNetwork(ctx *fiber.Ctx) error {
 	if errs != nil {
 		response := web.Failure{
 			Message: "Gagal buat network",
-			Code: 400,
-			Error: errs.Error(),
+			Code:    400,
+			Error:   errs.Error(),
 		}
 
 		return ctx.Status(400).JSON(response)
@@ -42,21 +42,21 @@ func(network *networkstruct) CreateNetwork(ctx *fiber.Ctx) error {
 
 	response := web.Success{
 		Message: "Success buat network",
-		Code: 200,
-		Data: data,
+		Code:    200,
+		Data:    data,
 	}
 
 	return ctx.Status(200).JSON(response)
 }
 
-func(network *networkstruct) InspectNetwork(ctx *fiber.Ctx) error {
+func (network *networkstruct) InspectNetwork(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 	data, err := network.service.InspectNetwork(id)
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal inspect network",
-			Code: 400,
-			Error: err.Error(),
+			Code:    400,
+			Error:   err.Error(),
 		}
 
 		return ctx.Status(400).JSON(response)
@@ -64,8 +64,29 @@ func(network *networkstruct) InspectNetwork(ctx *fiber.Ctx) error {
 
 	response := web.Success{
 		Message: "Network ditemukan",
-		Code: 200,
-		Data: data,
+		Code:    200,
+		Data:    data,
+	}
+
+	return ctx.Status(200).JSON(response)
+}
+
+func (network *networkstruct) ListNetworks(ctx *fiber.Ctx) error {
+	data, err := network.service.ListNetworks()
+	if err != nil {
+		response := web.Failure{
+			Message: "Gagal melihat list network",
+			Code:    500,
+			Error:   err.Error(),
+		}
+
+		return ctx.Status(400).JSON(response)
+	}
+
+	response := web.Success{
+		Message: "Network ditemukan",
+		Code:    200,
+		Data:    data,
 	}
 
 	return ctx.Status(200).JSON(response)

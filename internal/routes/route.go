@@ -27,6 +27,7 @@ func RouteNetwork(f fiber.Router, handler ihttp.NetworkInterface) {
 	route := f.Group("/api/network", middleware.JWTVerify())
 	route.Post("/create", handler.CreateNetwork)
 	route.Get("/find/:id", handler.InspectNetwork)
+	route.Get("/find", handler.ListNetworks)
 }
 
 func RouteUser(f fiber.Router, handler ihttp.UserInterface) {
