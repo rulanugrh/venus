@@ -3,9 +3,9 @@ package dto
 import "io"
 
 type Image struct {
-	Repository string `qs:"fromImage" json:"repository"`
-	Tag        string `json:"string"`
-	Platform   string `ver:"1.32" json:"platform"`
+	Repository string `json:"repository"`
+	Tag        string `json:"tag"`
+	Platform   string `json:"platform"`
 	Username   string `json:"username"`
 	Password   string `json:"password"`
 	Email      string `json:"email"`
@@ -13,12 +13,12 @@ type Image struct {
 
 type BuildImage struct {
 	Dockerfile   string   `json:"file" form:"file"`
-	Name         string   `qs:"t"`
-	Labels       map[string]string
+	Name         string   `qs:"t" json:"name" form:"name"`
+	Labels       map[string]string `json:"labels" form:"labels"`
 	InputStream  io.Reader `qs:"-"`
 	OutputStream io.Writer `qs:"-"`
-	Remote       string
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	Email        string `json:"email"`
+	Remote       string `json:"remote" form:"remote"`
+	Username     string `json:"username" form:"username"`
+	Password     string `json:"password" form:"password"`
+	Email        string `json:"email" form:"email"`
 }

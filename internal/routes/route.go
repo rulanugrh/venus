@@ -11,7 +11,7 @@ func RouteContainer(f fiber.Router, handler ihttp.ContainerInterface) {
 	route.Post("/create", handler.CreateContainer)
 	route.Get("/find", handler.ListContainer)
 	route.Get("/find/:id", handler.InspectContainer)
-	route.Get("/delete/:id", handler.DeleteContainer)
+	route.Delete("/delete/:id", handler.DeleteContainer)
 }
 
 func RouteImage(f fiber.Router, handler ihttp.ImageInterface) {
@@ -20,7 +20,7 @@ func RouteImage(f fiber.Router, handler ihttp.ImageInterface) {
 	route.Post("/build", handler.BuildImage)
 	route.Get("/find", handler.ListImage)
 	route.Get("/find/:id", handler.InspectImage)
-	route.Get("/delete/:id", handler.DeleteImage)
+	route.Delete("/delete/:id", handler.DeleteImage)
 }
 
 func RouteUser(f fiber.Router, handler ihttp.UserInterface) {

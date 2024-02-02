@@ -42,6 +42,7 @@ func(image *imagestruct) PullImage(req dto.Image) error {
 func(image *imagestruct) ListImage() ([]dao.Image, error) {
 	data, err := image.client.ListImages(docker.ListImagesOptions{
 		All: true,
+		Digests: false,
 	})
 
 	if err != nil {
