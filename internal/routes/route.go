@@ -23,6 +23,12 @@ func RouteImage(f fiber.Router, handler ihttp.ImageInterface) {
 	route.Delete("/delete/:id", handler.DeleteImage)
 }
 
+func RouteNetwork(f fiber.Router, handler ihttp.NetworkInterface) {
+	route := f.Group("/api/network", middleware.JWTVerify())
+	route.Post("/create", handler.CreateNetwork)
+	route.Get("/find/:id", handler.InspectNetwork)
+}
+
 func RouteUser(f fiber.Router, handler ihttp.UserInterface) {
 	route := f.Group("/api/user")
 	route.Post("/login", handler.Login)

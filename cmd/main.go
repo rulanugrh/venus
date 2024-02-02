@@ -37,10 +37,14 @@ func main() {
 
 	userService := service.NewUserService(*conf)
 	userHandler := handler.NewUserHandler(userService)
+	
+	networkService := service.NewNetworkService(conn)
+	networkHandler := handler.NewNetworkHandler(networkService)
 
 	routes.RouteContainer(f, containerHandler)
 	routes.RouteImage(f, imageHandler)
 	routes.RouteUser(f, userHandler)
+	routes.RouteNetwork(f, networkHandler)
 
 	server := fmt.Sprintf("%s:%s", conf.Server.Host, conf.Server.Port)
 	log.Fatal(f.Listen(server))
