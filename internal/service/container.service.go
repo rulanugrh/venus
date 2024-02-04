@@ -8,21 +8,28 @@ import (
 	"github.com/rulanugrh/venus/internal/entity/dao"
 	"github.com/rulanugrh/venus/internal/entity/dto"
 	"github.com/rulanugrh/venus/internal/entity/web"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 
 	iservice "github.com/rulanugrh/venus/internal/service/port"
 )
 
 type containerstruct struct {
 	client *docker.Client
+	tracer trace.Tracer
 }
 
-func NewContainerService(client *docker.Client) iservice.ContainerInterface {
+func NewContainerService(client *docker.Client, tracer trace.Tracer) iservice.ContainerInterface {
 	return &containerstruct{
 		client: client,
+		tracer: tracer,
 	}
 }
 
 func (container *containerstruct) Create(req dto.Container, ctx context.Context) (*dao.Container, error) {
+	_, span := container.tracer.Start(ctx, "createContainer")
+	defer span.End()
+
 	data, err := container.client.CreateContainer(docker.CreateContainerOptions{
 		Name:     req.Name,
 		Platform: req.Platform,
@@ -79,7 +86,10 @@ func (container *containerstruct) Create(req dto.Container, ctx context.Context)
 	return &response, nil
 }
 
-func (container *containerstruct) ListContainer() ([]dao.ListContainer, error) {
+func (container *containerstruct) ListContainer(ctx context.Context) ([]dao.ListContainer, error) {
+	_, span := container.tracer.Start(ctx, "listContiner")
+	defer span.End()
+
 	data, err := container.client.ListContainers(docker.ListContainersOptions{
 		All:   true,
 		Limit: 10,
@@ -123,7 +133,10 @@ func (container *containerstruct) ListContainer() ([]dao.ListContainer, error) {
 	return response, nil
 }
 
-func (container *containerstruct) InspectContainer(id string) (*dao.InspectContainer, error) {
+func (container *containerstruct) InspectContainer(ctx context.Context, id string) (*dao.InspectContainer, error) {
+	_, span := container.tracer.Start(ctx, "inspectContainer", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+
 	data, err := container.client.InspectContainer(id)
 	if err != nil {
 		return nil, web.Error{
@@ -148,6 +161,9 @@ func (container *containerstruct) InspectContainer(id string) (*dao.InspectConta
 }
 
 func (container *containerstruct) DeleteContaienr(id string, ctx context.Context) error {
+	_, span := container.tracer.Start(ctx, "deleteCotainer", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+
 	err := container.client.RemoveContainer(docker.RemoveContainerOptions{
 		Context: ctx,
 		ID:      id,
@@ -164,6 +180,9 @@ func (container *containerstruct) DeleteContaienr(id string, ctx context.Context
 }
 
 func(container *containerstruct) ExecContainer(id string, r io.Reader, w io.Writer, ctx context.Context) error {
+	_, span := container.tracer.Start(ctx, "execContainer", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+
 	err := container.client.StartExec(id, docker.StartExecOptions{
 		Tty: true,
 		RawTerminal: true,

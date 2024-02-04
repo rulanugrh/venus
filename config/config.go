@@ -17,6 +17,10 @@ type App struct {
 		Email    string
 		Password string
 	}
+
+	Opentelemetry struct {
+		Name string
+	}
 }
 
 var app *App
@@ -38,6 +42,7 @@ func initConfig() *App {
 		conf.Server.Host = "localhost"
 		conf.Server.Port = "3000"
 
+		conf.Opentelemetry.Name = ""
 		return &conf
 	}
 
@@ -48,5 +53,6 @@ func initConfig() *App {
 	conf.Server.Origin = os.Getenv("SERVER_ORIGIN")
 	conf.Server.Secret = os.Getenv("SERVER_SECRET")
 
+	conf.Opentelemetry.Name = os.Getenv("OTEL_SERVICE_NAME")
 	return &conf
 }

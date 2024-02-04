@@ -53,7 +53,7 @@ func(container *containerstruct) CreateContainer(ctx *fiber.Ctx) error {
 }
 
 func(container *containerstruct) ListContainer(ctx *fiber.Ctx) error {
-	data, err := container.service.ListContainer()
+	data, err := container.service.ListContainer(ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Code: 400,
@@ -75,7 +75,7 @@ func(container *containerstruct) ListContainer(ctx *fiber.Ctx) error {
 
 func(container *containerstruct) DeleteContainer(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	err := container.service.DeleteContaienr(id, ctx.Context())
+	err := container.service.DeleteContaienr(id, ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Code: 400,
@@ -97,7 +97,7 @@ func(container *containerstruct) DeleteContainer(ctx *fiber.Ctx) error {
 
 func(container *containerstruct) InspectContainer(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	data, err := container.service.InspectContainer(id)
+	data, err := container.service.InspectContainer(ctx.UserContext(), id)
 
 	if err != nil {
 		response := web.Failure{
@@ -120,7 +120,7 @@ func(container *containerstruct) InspectContainer(ctx *fiber.Ctx) error {
 
 func(container *containerstruct) ExecContainer(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	err := container.service.ExecContainer(id, ctx.Context().RequestBodyStream(), ctx.Context().Request.BodyWriter(), ctx.Context())
+	err := container.service.ExecContainer(id, ctx.Context().RequestBodyStream(), ctx.Context().Request.BodyWriter(), ctx.UserContext())
 
 	if err != nil {
 		response := web.Failure{

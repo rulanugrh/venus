@@ -10,8 +10,8 @@ import (
 
 type ContainerInterface interface {
 	Create(req dto.Container, ctx context.Context) (*dao.Container, error)
-	ListContainer() ([]dao.ListContainer, error)
-	InspectContainer(id string) (*dao.InspectContainer, error)
+	ListContainer(ctx context.Context) ([]dao.ListContainer, error)
+	InspectContainer(ctx context.Context, id string) (*dao.InspectContainer, error)
 	DeleteContaienr(id string, ctx context.Context) error
 	ExecContainer(id string, r io.Reader, w io.Writer, ctx context.Context) error
 }
