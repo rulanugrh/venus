@@ -41,10 +41,14 @@ func main() {
 	networkService := service.NewNetworkService(conn)
 	networkHandler := handler.NewNetworkHandler(networkService)
 
+	volumeService := service.NewVolumeService(conn)
+	volumeHandler := handler.NewVolumeHandler(volumeService)
+
 	routes.RouteContainer(f, containerHandler)
 	routes.RouteImage(f, imageHandler)
 	routes.RouteUser(f, userHandler)
 	routes.RouteNetwork(f, networkHandler)
+	routes.RouteVolume(f, volumeHandler)
 
 	server := fmt.Sprintf("%s:%s", conf.Server.Host, conf.Server.Port)
 	log.Fatal(f.Listen(server))

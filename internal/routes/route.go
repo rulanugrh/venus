@@ -32,6 +32,14 @@ func RouteNetwork(f fiber.Router, handler ihttp.NetworkInterface) {
 	route.Delete("/delete/:id", handler.DeleteNetwork)
 }
 
+func RouteVolume(f fiber.Router, handler ihttp.VolumeInterface) {
+	route := f.Group("/api/volume", middleware.JWTVerify())
+	route.Post("/create", handler.CreateVolume)
+	route.Get("/find", handler.ListVolume)
+	route.Get("/find/:id", handler.InspectVolume)
+	route.Delete("/delete/:id", handler.DeleteVolume)
+}
+
 func RouteUser(f fiber.Router, handler ihttp.UserInterface) {
 	route := f.Group("/api/user")
 	route.Post("/login", handler.Login)
