@@ -1,28 +1,38 @@
 package service
 
 import (
+	"context"
+
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/rulanugrh/venus/internal/entity/dao"
 	"github.com/rulanugrh/venus/internal/entity/dto"
 	"github.com/rulanugrh/venus/internal/entity/web"
 	iservice "github.com/rulanugrh/venus/internal/service/port"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type imagestruct struct {
 	client *docker.Client
+	tracer trace.Tracer
 }
 
-func NewImageService(client *docker.Client) iservice.ImageInterface{
+func NewImageService(client *docker.Client, tracer trace.Tracer) iservice.ImageInterface{
 	return &imagestruct{
 		client: client,
+		tracer: tracer,
 	}
 }
 
-func(image *imagestruct) PullImage(req dto.Image) error {
+func(image *imagestruct) PullImage(ctx context.Context, req dto.Image) error {
+	_, span := image.tracer.Start(ctx, "pullImage")
+	defer span.End()
+	
 	err := image.client.PullImage(docker.PullImageOptions{
 		Repository: req.Repository,
 		Platform: req.Platform,
 		Tag: req.Tag,
+		Context: ctx,
 	}, docker.AuthConfiguration{
 		Username: req.Username,
 		Password: req.Password,
@@ -39,10 +49,14 @@ func(image *imagestruct) PullImage(req dto.Image) error {
 	return nil
 }
 
-func(image *imagestruct) ListImage() ([]dao.Image, error) {
+func(image *imagestruct) ListImage(ctx context.Context) ([]dao.Image, error) {
+	_, span := image.tracer.Start(ctx, "listImage")
+	defer span.End()
+
 	data, err := image.client.ListImages(docker.ListImagesOptions{
 		All: true,
 		Digests: false,
+		Context: ctx,
 	})
 
 	if err != nil {
@@ -69,7 +83,10 @@ func(image *imagestruct) ListImage() ([]dao.Image, error) {
 	return response, nil
 }
 
-func(image *imagestruct) InspectImage(id string) (*dao.InspectImage, error) {
+func(image *imagestruct) InspectImage(id string, ctx context.Context) (*dao.InspectImage, error) {
+	_, span := image.tracer.Start(ctx, "inspectImage", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+	
 	data, err := image.client.InspectImage(id)
 	if err != nil {
 		return nil, web.Error{
@@ -94,7 +111,10 @@ func(image *imagestruct) InspectImage(id string) (*dao.InspectImage, error) {
 	return &response, nil
 }
 
-func(image *imagestruct) DeleteImage(id string) error {
+func(image *imagestruct) DeleteImage(id string, ctx context.Context) error {
+	_, span := image.tracer.Start(ctx, "deleteImage", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+
 	err := image.client.RemoveImage(id)
 	if err != nil {
 		return web.Error{
@@ -106,7 +126,10 @@ func(image *imagestruct) DeleteImage(id string) error {
 	return nil
 }
 
-func (image *imagestruct) BuildImage(model dto.BuildImage) error {
+func (image *imagestruct) BuildImage(model dto.BuildImage, ctx context.Context) error {
+	_, span := image.tracer.Start(ctx, "buildImage")
+	defer span.End()
+
 	err := image.client.BuildImage(docker.BuildImageOptions{
 		Dockerfile: model.Dockerfile,
 		Name: model.Name,
@@ -114,6 +137,7 @@ func (image *imagestruct) BuildImage(model dto.BuildImage) error {
 		InputStream: model.InputStream,
 		OutputStream: model.OutputStream,
 		Labels: model.Labels,
+		Context: ctx,
 		Auth: docker.AuthConfiguration{
 			Username: model.Username,
 			Email: model.Email,

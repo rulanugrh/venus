@@ -30,7 +30,7 @@ func(image *imagestruct) PullImage(ctx *fiber.Ctx) error {
 		return ctx.Status(500).JSON(response)
 	}
 
-	errCreate := image.service.PullImage(model)
+	errCreate := image.service.PullImage(ctx.UserContext(), model)
 	if errCreate != nil {
 		response := web.Failure{
 			Message: "Tidak bisa pull image",
@@ -51,7 +51,7 @@ func(image *imagestruct) PullImage(ctx *fiber.Ctx) error {
 }
 
 func(image *imagestruct) ListImage(ctx *fiber.Ctx) error {
-	data, err := image.service.ListImage()
+	data, err := image.service.ListImage(ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Code: 400,
@@ -73,7 +73,7 @@ func(image *imagestruct) ListImage(ctx *fiber.Ctx) error {
 
 func(image *imagestruct) DeleteImage(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	err := image.service.DeleteImage(id)
+	err := image.service.DeleteImage(id, ctx.UserContext())
 
 	if err != nil {
 		response := web.Failure{
@@ -96,7 +96,7 @@ func(image *imagestruct) DeleteImage(ctx *fiber.Ctx) error {
 
 func(image *imagestruct) InspectImage(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	data, err := image.service.InspectImage(id)
+	data, err := image.service.InspectImage(id, ctx.UserContext())
 
 	if err != nil {
 		response := web.Failure{
@@ -145,7 +145,7 @@ func (image *imagestruct) BuildImage(ctx *fiber.Ctx) error {
 		return ctx.Status(500).JSON(response)
 	}
 
-	errBuild := image.service.BuildImage(model)
+	errBuild := image.service.BuildImage(model, ctx.UserContext())
 	if errBuild != nil {
 		response := web.Failure{
 			Message: "Gagal build image",
