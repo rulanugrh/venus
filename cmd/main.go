@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/rulanugrh/venus/config"
 	handler "github.com/rulanugrh/venus/internal/http"
 	"github.com/rulanugrh/venus/internal/routes"
@@ -27,6 +29,15 @@ func main() {
 			fiber.MethodPost,
 		}, ","),
 		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
+
+	file, _ := os.OpenFile("./log/fiber.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	defer file.Close()
+
+	f.Use(logger.New(logger.Config{
+		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+		TimeZone: "Asia/Jakarta",
+		Output: file,
 	}))
 
 	containerService := service.NewContainerService(conn)
