@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"io"
 
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/rulanugrh/venus/internal/entity/dao"
@@ -150,7 +151,7 @@ func(container *containerstruct) DeleteContaienr(id string, ctx context.Context)
 		Context: ctx,
 		ID: id,
 	})
-
+	
 	if err != nil {
 		return web.Error{
 			Message: err.Error(),
@@ -161,3 +162,21 @@ func(container *containerstruct) DeleteContaienr(id string, ctx context.Context)
 	return nil
 }
 
+func(container *containerstruct) ExecContainer(id string, r io.Reader, w io.Writer, ctx context.Context) error {
+	err := container.client.StartExec(id, docker.StartExecOptions{
+		Tty: true,
+		RawTerminal: true,
+		InputStream: r,
+		OutputStream: w,
+		Context: ctx,
+	})
+
+	if err != nil {
+		return web.Error{
+			Message: err.Error(),
+			Code: 500,
+		}
+	}
+
+	return nil
+}

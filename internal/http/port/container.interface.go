@@ -7,4 +7,5 @@ type ContainerInterface interface {
 	ListContainer(ctx *fiber.Ctx) error
 	DeleteContainer(ctx *fiber.Ctx) error
 	InspectContainer(ctx *fiber.Ctx) error
+	ExecContainer(ctx *fiber.Ctx) error
 }

@@ -117,3 +117,26 @@ func(container *containerstruct) InspectContainer(ctx *fiber.Ctx) error {
 
 	return ctx.Status(200).JSON(response)
 }
+
+func(container *containerstruct) ExecContainer(ctx *fiber.Ctx) error {
+	id := ctx.Params("id")
+	err := container.service.ExecContainer(id, ctx.Context().RequestBodyStream(), ctx.Context().Request.BodyWriter(), ctx.Context())
+
+	if err != nil {
+		response := web.Failure{
+			Code: 500,
+			Message: "Gagal exec container dengan id ini",
+			Error: err,
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	response := web.Success{
+		Message: "Success exec container",
+		Code: 200,
+		Data: "Berhasil exec container",
+	}
+
+	return ctx.Status(200).JSON(response)
+}
