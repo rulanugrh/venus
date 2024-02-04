@@ -8,19 +8,26 @@ import (
 	"github.com/rulanugrh/venus/internal/entity/dto"
 	"github.com/rulanugrh/venus/internal/entity/web"
 	iservice "github.com/rulanugrh/venus/internal/service/port"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type volumestruct struct {
 	client *docker.Client
+	tracer trace.Tracer
 }
 
-func NewVolumeService(client *docker.Client) iservice.VolumeInterface {
+func NewVolumeService(client *docker.Client, tracer trace.Tracer) iservice.VolumeInterface {
 	return &volumestruct{
 		client: client,
+		tracer: tracer,
 	}
 }
 
 func(volume *volumestruct) CreateVolume(req dto.Volume, ctx context.Context) (*dao.Volume, error) {
+	_, span := volume.tracer.Start(ctx, "createVolume")
+	defer span.End()
+
 	data, err := volume.client.CreateVolume(docker.CreateVolumeOptions{
 		Name: req.Name,
 		Driver: req.Driver,
@@ -46,7 +53,10 @@ func(volume *volumestruct) CreateVolume(req dto.Volume, ctx context.Context) (*d
 	return &response, nil
 }
 
-func(volume *volumestruct) ListVolume() ([]dao.Volume, error) {
+func(volume *volumestruct) ListVolume(ctx context.Context) ([]dao.Volume, error) {
+	_, span := volume.tracer.Start(ctx, "listVolume")
+	defer span.End()
+
 	data, err := volume.client.ListVolumes(docker.ListVolumesOptions{})
 	if err != nil {
 		return nil, web.Error{
@@ -70,7 +80,10 @@ func(volume *volumestruct) ListVolume() ([]dao.Volume, error) {
 	return response, nil
 }
 
-func(volume *volumestruct) InspectVolume(name string) (*dao.Volume, error) {
+func(volume *volumestruct) InspectVolume(name string, ctx context.Context) (*dao.Volume, error) {
+	_, span := volume.tracer.Start(ctx, "inspectVolume", trace.WithAttributes(attribute.String("name", name)))
+	defer span.End()
+
 	data, err := volume.client.InspectVolume(name)
 	if err != nil {
 		return nil, web.Error{
@@ -89,7 +102,10 @@ func(volume *volumestruct) InspectVolume(name string) (*dao.Volume, error) {
 	return &response, nil
 }
 
-func(volume *volumestruct) DeleteVolume(name string) error {
+func(volume *volumestruct) DeleteVolume(name string, ctx context.Context) error {
+	_, span := volume.tracer.Start(ctx, "deleteVolume", trace.WithAttributes(attribute.String("name",name)))
+	defer span.End()
+
 	err := volume.client.RemoveVolume(name)
 	if err != nil {
 		return web.Error{

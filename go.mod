@@ -6,6 +6,7 @@ require (
 	github.com/fsouza/go-dockerclient v1.10.1
 	github.com/go-playground/validator/v10 v10.17.0
 	github.com/gofiber/contrib/jwt v1.0.8
+	github.com/gofiber/contrib/otelfiber/v2 v2.0.0-20240125212321-8f79f359649f
 	github.com/gofiber/fiber/v2 v2.52.0
 	github.com/golang-jwt/jwt/v5 v5.2.0
 	github.com/joho/godotenv v1.5.1
@@ -49,6 +50,7 @@ require (
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasthttp v1.51.0 // indirect
 	github.com/valyala/tcplisten v1.0.0 // indirect
+	go.opentelemetry.io/contrib v1.20.0 // indirect
 	go.opentelemetry.io/otel/metric v1.22.0 // indirect
 	golang.org/x/crypto v0.18.0 // indirect
 	golang.org/x/mod v0.14.0 // indirect

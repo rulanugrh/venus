@@ -1,11 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 
+	"github.com/gofiber/contrib/otelfiber/v2"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -19,6 +21,14 @@ import (
 func main() {
 	conf := config.GetConfig()
 	conn := util.GetClient()
+	tracer := util.GetTracer()
+
+	opentele := util.InitTracer()
+	defer func(){
+		if err := opentele.Shutdown(context.Background()); err != nil {
+			log.Printf("Error shutting down: %v", err)
+		}
+	}()
 
 	f := fiber.New()
 	f.Use(cors.New(cors.Config{
@@ -40,19 +50,20 @@ func main() {
 		Output: file,
 	}))
 
-	containerService := service.NewContainerService(conn)
+	f.Use(otelfiber.Middleware())
+	containerService := service.NewContainerService(conn, tracer)
 	containerHandler := handler.NewContainerHandler(containerService)
 
-	imageService := service.NewImageService(conn)
+	imageService := service.NewImageService(conn, tracer)
 	imageHandler := handler.NewImageHandler(imageService)
 
 	userService := service.NewUserService(*conf)
 	userHandler := handler.NewUserHandler(userService)
 	
-	networkService := service.NewNetworkService(conn)
+	networkService := service.NewNetworkService(conn, tracer)
 	networkHandler := handler.NewNetworkHandler(networkService)
 
-	volumeService := service.NewVolumeService(conn)
+	volumeService := service.NewVolumeService(conn, tracer)
 	volumeHandler := handler.NewVolumeHandler(volumeService)
 
 	routes.RouteContainer(f, containerHandler)

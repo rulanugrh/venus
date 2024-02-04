@@ -9,7 +9,7 @@ import (
 
 type VolumeInterface interface {
 	CreateVolume(req dto.Volume, ctx context.Context) (*dao.Volume, error)
-	ListVolume() ([]dao.Volume, error)
-	InspectVolume(name string) (*dao.Volume, error)
-	DeleteVolume(name string) error
+	ListVolume(ctx context.Context) ([]dao.Volume, error)
+	InspectVolume(name string, ctx context.Context) (*dao.Volume, error)
+	DeleteVolume(name string, ctx context.Context) error
 }

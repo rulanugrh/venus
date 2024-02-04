@@ -29,7 +29,7 @@ func (network *networkstruct) CreateNetwork(ctx *fiber.Ctx) error {
 
 		return ctx.Status(500).JSON(response)
 	}
-	data, errs := network.service.CreateNetwork(model)
+	data, errs := network.service.CreateNetwork(model, ctx.UserContext())
 	if errs != nil {
 		response := web.Failure{
 			Message: "Gagal buat network",
@@ -51,7 +51,7 @@ func (network *networkstruct) CreateNetwork(ctx *fiber.Ctx) error {
 
 func (network *networkstruct) InspectNetwork(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	data, err := network.service.InspectNetwork(id)
+	data, err := network.service.InspectNetwork(id, ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal inspect network",
@@ -72,7 +72,7 @@ func (network *networkstruct) InspectNetwork(ctx *fiber.Ctx) error {
 }
 
 func (network *networkstruct) ListNetworks(ctx *fiber.Ctx) error {
-	data, err := network.service.ListNetworks()
+	data, err := network.service.ListNetworks(ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal melihat list network",
@@ -94,7 +94,7 @@ func (network *networkstruct) ListNetworks(ctx *fiber.Ctx) error {
 
 func (network *networkstruct) DeleteNetwork(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
-	err := network.service.DeleteNetwork(id)
+	err := network.service.DeleteNetwork(id, ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal delete network",

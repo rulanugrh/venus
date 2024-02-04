@@ -32,7 +32,7 @@ func(volume *volumestruct) CreateVolume(ctx *fiber.Ctx) error {
 		return ctx.Status(500).JSON(response)
 	}
 
-	data, err := volume.service.CreateVolume(models, ctx.Context())
+	data, err := volume.service.CreateVolume(models, ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal create volume",
@@ -54,7 +54,7 @@ func(volume *volumestruct) CreateVolume(ctx *fiber.Ctx) error {
 
 func(volume *volumestruct) InspectVolume(ctx *fiber.Ctx) error {
 	name := ctx.Params("name")
-	data, err := volume.service.InspectVolume(name)
+	data, err := volume.service.InspectVolume(name, ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Message: "Gagal inspect volume",
@@ -75,7 +75,7 @@ func(volume *volumestruct) InspectVolume(ctx *fiber.Ctx) error {
 }
 
 func(volume *volumestruct) ListVolume(ctx *fiber.Ctx) error {
-	data, err := volume.service.ListVolume()
+	data, err := volume.service.ListVolume(ctx.UserContext())
 	if err != nil {
 		response := web.Failure{
 			Message: "volume tidak ditemukan",
@@ -97,7 +97,7 @@ func(volume *volumestruct) ListVolume(ctx *fiber.Ctx) error {
 
 func(volume *volumestruct) DeleteVolume(ctx *fiber.Ctx) error {
 	name := ctx.Params("name")
-	err := volume.service.DeleteVolume(name)
+	err := volume.service.DeleteVolume(name, ctx.UserContext())
 	
 	if err != nil {
 		response := web.Failure{

@@ -1,24 +1,33 @@
 package service
 
 import (
+	"context"
+
 	docker "github.com/fsouza/go-dockerclient"
 	"github.com/rulanugrh/venus/internal/entity/dao"
 	"github.com/rulanugrh/venus/internal/entity/dto"
 	"github.com/rulanugrh/venus/internal/entity/web"
 	iservice "github.com/rulanugrh/venus/internal/service/port"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type servicestruct struct {
 	client *docker.Client
+	tracer trace.Tracer
 }
 
-func NewNetworkService(client *docker.Client) iservice.NetworkInterface {
+func NewNetworkService(client *docker.Client, tracer trace.Tracer) iservice.NetworkInterface {
 	return &servicestruct{
 		client: client,
+		tracer: tracer,
 	}
 }
 
-func (network *servicestruct) CreateNetwork(model dto.Network) (*dao.Network, error) {
+func (network *servicestruct) CreateNetwork(model dto.Network, ctx context.Context) (*dao.Network, error) {
+	_, span := network.tracer.Start(ctx, "createNetwork")
+	defer span.End()
+
 	data, err := network.client.CreateNetwork(docker.CreateNetworkOptions{
 		Name:           model.Name,
 		Driver:         model.Driver,
@@ -47,7 +56,10 @@ func (network *servicestruct) CreateNetwork(model dto.Network) (*dao.Network, er
 	return &response, nil
 }
 
-func (network *servicestruct) InspectNetwork(id string) (*dao.Network, error) {
+func (network *servicestruct) InspectNetwork(id string, ctx context.Context) (*dao.Network, error) {
+	_, span := network.tracer.Start(ctx, "inspectNetwork", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+
 	data, err := network.client.NetworkInfo(id)
 	if err != nil {
 		return nil, web.Error{
@@ -68,7 +80,10 @@ func (network *servicestruct) InspectNetwork(id string) (*dao.Network, error) {
 	return &response, nil
 }
 
-func (network *servicestruct) ListNetworks() ([]dao.Network, error) {
+func (network *servicestruct) ListNetworks(ctx context.Context) ([]dao.Network, error) {
+	_, span := network.tracer.Start(ctx, "listNetwork")
+	defer span.End()
+
 	data, err := network.client.ListNetworks()
 	if err != nil {
 		return nil, web.Error{
@@ -94,7 +109,10 @@ func (network *servicestruct) ListNetworks() ([]dao.Network, error) {
 	return response, nil
 }
 
-func (network *servicestruct) DeleteNetwork(id string) error {
+func (network *servicestruct) DeleteNetwork(id string, ctx context.Context) error {
+	_, span := network.tracer.Start(ctx, "deleteNetwork", trace.WithAttributes(attribute.String("id", id)))
+	defer span.End()
+
 	err := network.client.RemoveNetwork(id)
 	if err != nil {
 		return web.Error{
