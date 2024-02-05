@@ -200,3 +200,21 @@ func(container *containerstruct) ExecContainer(id string, r io.Reader, w io.Writ
 
 	return nil
 }
+
+func(container *containerstruct) Logger(name string, ctx context.Context, output io.Writer) error {
+	err := container.client.Logs(docker.LogsOptions{
+		Container: name,
+		Context: ctx,
+		RawTerminal: true,
+		OutputStream: output,
+	})
+
+	if err != nil {
+		return web.Error{
+			Message: err.Error(),
+			Code: 500,
+		}
+	}
+
+	return nil
+}

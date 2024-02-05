@@ -8,4 +8,5 @@ type ContainerInterface interface {
 	DeleteContainer(ctx *fiber.Ctx) error
 	InspectContainer(ctx *fiber.Ctx) error
 	ExecContainer(ctx *fiber.Ctx) error
+	Logger(ctx *fiber.Ctx) error
 }

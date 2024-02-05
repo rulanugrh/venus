@@ -14,4 +14,5 @@ type ContainerInterface interface {
 	InspectContainer(ctx context.Context, id string) (*dao.InspectContainer, error)
 	DeleteContaienr(id string, ctx context.Context) error
 	ExecContainer(id string, r io.Reader, w io.Writer, ctx context.Context) error
+	Logger(name string, ctx context.Context, output io.Writer) error 
 }

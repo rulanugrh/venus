@@ -12,6 +12,7 @@ func RouteContainer(f fiber.Router, handler ihttp.ContainerInterface) {
 	route.Get("/find", handler.ListContainer)
 	route.Get("/find/:id", handler.InspectContainer)
 	route.Get("/execute/:id", handler.ExecContainer)
+	route.Get("/logger/:name", handler.Logger)
 	route.Delete("/delete/:id", handler.DeleteContainer)
 }
 

@@ -140,3 +140,25 @@ func(container *containerstruct) ExecContainer(ctx *fiber.Ctx) error {
 
 	return ctx.Status(200).JSON(response)
 }
+
+func(container *containerstruct) Logger(ctx *fiber.Ctx) error {
+	name := ctx.Params("name")
+	err := container.service.Logger(name, ctx.UserContext(), ctx.Context().Request.BodyWriter())
+	if err != nil {
+		response := web.Failure{
+			Code: 500,
+			Message: "Gagal melihat log container dengan id ini",
+			Error: err,
+		}
+
+		return ctx.Status(500).JSON(response)
+	}
+
+	response := web.Success{
+		Message: "Success melihat log container ini",
+		Code: 200,
+		Data: "Berhasil",
+	}
+
+	return ctx.Status(200).JSON(response)
+}
