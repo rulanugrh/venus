@@ -2,10 +2,10 @@ depedency:
 	go mod download
 	
 run:
-	go run cmd/main.go
+	go run main.go
 
 build:
-	go build -o bin/main cmd/main.go
+	go build -o bin/main main.go
 	./bin/main
 
 clean:
