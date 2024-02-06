@@ -7,9 +7,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - run: echo "Mulai build golang binary"
-    - name: "Setup golang package"
 
-      uses: actions/setup-go@v5
+    - uses: actions/setup-go@v5
       with:
         go-version: '1.21.6'
     - run: go build -o bin/main main.go
