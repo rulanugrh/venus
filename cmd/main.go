@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/swagger"
 	"github.com/rulanugrh/venus/config"
 	handler "github.com/rulanugrh/venus/internal/http"
 	"github.com/rulanugrh/venus/internal/routes"
@@ -22,7 +23,7 @@ func main() {
 	conf := config.GetConfig()
 	conn := util.GetClient()
 	tracer := util.GetTracer()
-
+	
 	opentele := util.InitTracer()
 	defer func(){
 		if err := opentele.Shutdown(context.Background()); err != nil {
@@ -51,6 +52,8 @@ func main() {
 	}))
 
 	f.Use(otelfiber.Middleware())
+	f.Get("/docs/*", swagger.HandlerDefault)
+
 	containerService := service.NewContainerService(conn, tracer)
 	containerHandler := handler.NewContainerHandler(containerService)
 
