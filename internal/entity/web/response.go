@@ -1,20 +1,20 @@
 package web
 
 type Failure struct {
-	Code    int
-	Message string
-	Error   interface{}
+	Code    int `json:"code"`
+	Message string `json:"message"`
+	Error   interface{} `json:"error"`
 }
 
 type Success struct {
-	Code    int
-	Message string
-	Data    interface{}
+	Code    int `json:"code"`
+	Message string `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type Error struct {
-	Message string
-	Code    int
+	Message string `json:"msg"`
+	Code    int `json:"code"`
 }
 
 func (err Error) Error() string {
