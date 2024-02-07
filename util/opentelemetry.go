@@ -23,12 +23,14 @@ func InitTracer()  *sdktrace.TracerProvider {
 		log.Fatal(err)
 	}
 	
+	traceProcessor := sdktrace.NewBatchSpanProcessor(exporter)
 	tp := sdktrace.NewTracerProvider(
 		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+		sdktrace.WithSpanProcessor(traceProcessor),
 		sdktrace.WithBatcher(exporter),
 		sdktrace.WithResource(
 			resource.NewWithAttributes(
-				semconv.SchemaURL,
+				string(semconv.URLFullKey),
 				semconv.ServiceNameKey.String(conf.Opentelemetry.Name),
 			)),
 		)
