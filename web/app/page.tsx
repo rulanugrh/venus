@@ -54,16 +54,16 @@ export default function Home() {
     }
   }
   return (
-    <div className="pt-52 pb-52 bg-gradient-to-br from-semiLight from-30% via-semiLight via-20% to-darkColor to-50%">
+    <div className="pt-36 pb-52 bg-gradient-to-br from-semiDark from-30% via-semiDark via-20% to-darkColor to-50%">
       <div className="flex flex-wrap items-center justify-center ">
         <div className="px-4">
           <div className="grid grid-cols-1">
             <Image
-              src={"/next.svg"}
+              src={"/profile.png"}
               alt="Image Profile"
-              width={300}
-              height={300}
-              className="pb-5"
+              width={200}
+              height={200}
+              className="pb-3 mx-auto"
             />
             <form onSubmit={handleSubmit} action="post" className="text-sm">
               <div className="mt-5 my-2">
