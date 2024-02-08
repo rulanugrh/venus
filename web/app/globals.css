@@ -8,3 +8,8 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

@@ -33,12 +33,14 @@ export default function Home() {
 
   const handleSubmit = async (e: any) => {
     e.prevenDefault()
+    setMessage(null)
+
     setIsLoading(true)
 
     try {
       const response = await axiosInstante.post("/api/user/login", {
         email,
-        password
+        password,
       })
 
       Cookies.set("kukis", response.data.data)
@@ -52,8 +54,8 @@ export default function Home() {
     }
   }
   return (
-    <div className="pt-52 pb-16">
-      <div className="flex flex-wrap items-center justify-center">
+    <div className="pt-52 pb-52 bg-gradient-to-br from-semiLight from-30% via-semiLight via-20% to-darkColor to-50%">
+      <div className="flex flex-wrap items-center justify-center ">
         <div className="px-4">
           <div className="grid grid-cols-1">
             <Image
@@ -65,26 +67,26 @@ export default function Home() {
             />
             <form onSubmit={handleSubmit} action="post" className="text-sm">
               <div className="mt-5 my-2">
-                <label htmlFor="email" className="text-balance text-sm font-bold font-jetBrains  text-semiDark">Email <span className="text-red-500">*</span>
+                <label htmlFor="email" className="text-balance text-sm font-bold font-jetBrains  text-white/70">Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   type="email" 
-                  className="text-darkColor font-bold mt-1 placeholder:text-black/30 w-full bg-transparent pt-3 pl-2 pb-2 border border-darkColor/60 focus:outline-none rounded-lg"
+                  className="text-white/70 font-medium mt-1 placeholder:text-white/30 w-full bg-transparent pt-3 pl-2 pb-2 border border-semiLight/60 focus:outline-none rounded-lg"
                   placeholder="email@email.com"
                   id="email"
                   required
                 />
               </div>
-              <label htmlFor="password" className="text-balance text-sm font-bold font-jetBrains  text-semiDark">Password <span className="text-red-500">*</span>
+              <label htmlFor="password" className="text-balance text-sm font-bold font-jetBrains  text-white/70">Password <span className="text-red-500">*</span>
               </label>
               <div className="relative mb-6">
               <input
                   value={password}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                   type="password" 
-                  className="text-darkColor font-bold mt-1 placeholder:text-black/30 w-full bg-transparent pt-3 pl-2 pb-2 border border-darkColor/60 focus:outline-none rounded-lg"
+                  className="text-white/70 font-bold mt-1 placeholder:text-white/30 w-full bg-transparent pt-3 pl-2 pb-2 border border-semiLight/60 focus:outline-none rounded-lg"
                   placeholder="*******"
                   id="password"
                   required
@@ -92,7 +94,7 @@ export default function Home() {
               </div>
               <button
                 type="submit"
-                className="w-full text-lightColor bg-darkColor px-5 py-2 transition-full-200 rounded-lg"
+                className="w-full text-lightColor bg-semiDark shadow-md shadow-white/80 hover:bg-semiDark/80 hover:text-lightColor/85 hover:shadow-md hover:shadow-lightColor px-5 py-2 transition-full-200 rounded-lg"
               >
                 {isLoading ? "Loading..." : "Login"}
               </button>

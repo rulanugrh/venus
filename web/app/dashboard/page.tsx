@@ -1,7 +1,7 @@
 export default function Dashboard() {
     return(
-        <div>
-            <h1>hello world</h1>
+        <div className="pt-52 pb-32">
+            <div className="flex flex-wrap"></div>
         </div>
     )
 }

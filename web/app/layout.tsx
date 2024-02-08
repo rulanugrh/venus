@@ -7,7 +7,6 @@ const jetbrains = JetBrains_Mono({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Venus",
   description: "Venus is tools to create, manage, and delete docker container",
-  icons: "/icons.svg",
 };
 
 export default function RootLayout({
