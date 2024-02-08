@@ -63,7 +63,7 @@ export default function Home() {
               alt="Image Profile"
               width={400}
               height={200}
-              className="pb-3 mx-auto rounded-md shadow-sm shadow-white/70"
+              className="pb-3 mx-auto rounded-md"
             />
             <form onSubmit={handleSubmit} action="post" className="text-sm">
               <div className="mt-5 my-2">
