@@ -58,6 +58,18 @@ func (volume *VolumeTest) TestCreateVolume() {
 	volume.Equal("Success create volume", res.Message)
 }
 
+func(volume *VolumeTest) TestListNetwork() {
+	url := fmt.Sprintf("http://%s:%s/api/v1/volume/find", volume.conf.Server.Host, volume.conf.Server.Port)
+
+	res, resp, err := volume.client.Get(url, volume.res, Token.(string))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	volume.Equal(http.StatusAccepted, resp.StatusCode)
+	volume.Equal("volume ditemukan", res.Message)
+}
+
 func TestVolume(t *testing.T) {
 	suite.Run(t, NewVolumeTest())
 }
