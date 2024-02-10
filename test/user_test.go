@@ -42,7 +42,9 @@ func (user *UserTest) TestLogin() {
 
 	byt := bytes.NewBuffer(jsonBytes)
 	url := fmt.Sprintf("http://%s:%s/api/v1/user/login", conf.Server.Host, conf.Server.Port)
+
 	res, resp, err := user.client.Post(url, byt, user.res)
+
 	user.Equal(http.StatusAccepted, resp.StatusCode)
 	user.Equal("success login", res.Message)
 
