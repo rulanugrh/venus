@@ -42,7 +42,7 @@ func main() {
 		AllowHeaders: "Origin, Content-Type, Accept",
 	}))
 
-	file, _ := os.OpenFile("./log/fiber.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	file, _ := os.OpenFile("./log/fiber.log", os.O_CREATE, 0600)
 	defer file.Close()
 
 	f.Use(logger.New(logger.Config{
