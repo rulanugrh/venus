@@ -3,7 +3,7 @@ FROM node:1.21-alpine
 
 WORKDIR /usr/src/app
 
-ADD /web/* .
+COPY /web/* .
 
 RUN npm install
 
