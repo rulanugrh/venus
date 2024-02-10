@@ -15,6 +15,8 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
+var Token interface{}
+
 type UserTest struct {
 	suite.Suite
 	client util.SuiteInterface
@@ -43,13 +45,14 @@ func (user *UserTest) TestLogin() {
 	byt := bytes.NewBuffer(jsonBytes)
 	url := fmt.Sprintf("http://%s:%s/api/v1/user/login", conf.Server.Host, conf.Server.Port)
 
-	res, resp, err := user.client.Post(url, byt, user.res)
+	res, resp, err := user.client.Login(url, byt, user.res)
 
 	user.Equal(http.StatusAccepted, resp.StatusCode)
 	user.Equal("success login", res.Message)
+	Token = res.Data
 
 }
 
-func TestUserService(t *testing.T) {
+func TestUser(t *testing.T) {
 	suite.Run(t, NewUserTest())
 }
