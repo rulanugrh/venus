@@ -12,7 +12,7 @@ func ValidateStruct(validate *validator.Validate, data interface{}) error {
 	if err != nil {
 		errors := []web.ValidationList{}
 		for _, err := range err.(validator.ValidationErrors) {
-			field, _ := reflect.TypeOf(data).FieldByName(err.Field())
+			field, _ := reflect.TypeOf(data).FieldByName(err.ActualTag())
 			errors = append(errors, web.ValidationList{
 				Field: field.Name,
 				Error: err.Field() + " | " + err.ActualTag(),
@@ -21,7 +21,7 @@ func ValidateStruct(validate *validator.Validate, data interface{}) error {
 
 		return web.ValidationError{
 			Message: "validation error",
-			Errors: errors,
+			Errors:  errors,
 		}
 	}
 
