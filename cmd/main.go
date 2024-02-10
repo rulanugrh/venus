@@ -23,9 +23,9 @@ func main() {
 	conf := config.GetConfig()
 	conn := util.GetClient()
 	tracer := util.GetTracer()
-	
+
 	opentele := util.InitTracer()
-	defer func(){
+	defer func() {
 		if err := opentele.Shutdown(context.Background()); err != nil {
 			log.Printf("Error shutting down: %v", err)
 		}
@@ -46,9 +46,9 @@ func main() {
 	defer file.Close()
 
 	f.Use(logger.New(logger.Config{
-		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+		Format:   "[${ip}]:${port} ${status} - ${method} ${path}\n",
 		TimeZone: "Asia/Jakarta",
-		Output: file,
+		Output:   file,
 	}))
 
 	f.Use(otelfiber.Middleware())
@@ -57,12 +57,12 @@ func main() {
 	containerService := service.NewContainerService(conn, tracer)
 	containerHandler := handler.NewContainerHandler(containerService)
 
-	imageService := service.NewImageService(conn, tracer)
+	imageService := service.NewImageService(conn, tracer, conf)
 	imageHandler := handler.NewImageHandler(imageService)
 
 	userService := service.NewUserService(*conf)
 	userHandler := handler.NewUserHandler(userService)
-	
+
 	networkService := service.NewNetworkService(conn, tracer)
 	networkHandler := handler.NewNetworkHandler(networkService)
 
