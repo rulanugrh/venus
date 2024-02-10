@@ -47,7 +47,7 @@ func (volume *VolumeTest) TestCreateVolume() {
 		log.Fatal(err)
 	}
 	byt := bytes.NewBuffer(jsonBytes)
-	url := fmt.Sprintf("http://%s:%s/api/v1/volume/create", volume.conf.Server.Host, volume.conf.Server.Port)
+	url := fmt.Sprintf("http://%s:%s/api/volume/create", volume.conf.Server.Host, volume.conf.Server.Port)
 
 	res, resp, err := volume.client.Post(url, byt, volume.res, Token.(string))
 	if err != nil {
@@ -59,7 +59,7 @@ func (volume *VolumeTest) TestCreateVolume() {
 }
 
 func(volume *VolumeTest) TestListNetwork() {
-	url := fmt.Sprintf("http://%s:%s/api/v1/volume/find", volume.conf.Server.Host, volume.conf.Server.Port)
+	url := fmt.Sprintf("http://%s:%s/api/volume/find", volume.conf.Server.Host, volume.conf.Server.Port)
 
 	res, resp, err := volume.client.Get(url, volume.res, Token.(string))
 	if err != nil {

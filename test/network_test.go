@@ -31,7 +31,7 @@ func NewNetworkTest() *NetworkTest {
 }
 
 func (network *NetworkTest) TestGetAllNetwork() {
-	url := fmt.Sprintf("http://%s:%s/api/v1/network/find", network.conf.Server.Host, network.conf.Server.Port)
+	url := fmt.Sprintf("http://%s:%s/api/network/find", network.conf.Server.Host, network.conf.Server.Port)
 	res, resp, err := network.client.Get(url, network.res, Token.(string))
 	if err != nil {
 		log.Fatal(err)
@@ -39,31 +39,6 @@ func (network *NetworkTest) TestGetAllNetwork() {
 
 	network.Equal(http.StatusAccepted, resp.StatusCode)
 	network.Equal("Network ditemukan", res.Message)
-}
-
-func (network *NetworkTest) TestInspectNetwork() {
-	url := fmt.Sprintf("http://%s:%s/api/v1/network/find", network.conf.Server.Host, network.conf.Server.Port)
-	res, resp, err := network.client.Get(url, network.res, Token.(string))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	network.Equal(http.StatusAccepted, resp.StatusCode)
-	network.Equal("Network ditemukan", res.Message)
-}
-
-func (network *NetworkTest) TestDeleteNetwork() {
-	url := fmt.Sprintf("http://%s:%s/api/v1/network/delete", network.conf.Server.Host, network.conf.Server.Port)
-	res, resp, err := network.client.Get(url, network.res, Token.(string))
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	network.Equal(http.StatusAccepted, resp.StatusCode)
-	network.Equal("Network berhasil dihapus", res.Message)
-
 }
 
 func (network *NetworkTest) TestCreateNetwork() {
@@ -81,7 +56,7 @@ func (network *NetworkTest) TestCreateNetwork() {
 	}
 
 	byt := bytes.NewBuffer(jsonBytes)
-	url := fmt.Sprintf("http://%s:%s/api/v1/network/create", network.conf.Server.Host, network.conf.Server.Port)
+	url := fmt.Sprintf("http://%s:%s/api/network/create", network.conf.Server.Host, network.conf.Server.Port)
 
 	res, resp, err := network.client.Post(url, byt, network.res, Token.(string))
 	if err != nil {

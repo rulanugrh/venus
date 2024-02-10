@@ -43,7 +43,7 @@ func (user *UserTest) TestLogin() {
 	}
 
 	byt := bytes.NewBuffer(jsonBytes)
-	url := fmt.Sprintf("http://%s:%s/api/v1/user/login", conf.Server.Host, conf.Server.Port)
+	url := fmt.Sprintf("http://%s:%s/api/user/login", conf.Server.Host, conf.Server.Port)
 
 	res, resp, err := user.client.Login(url, byt, user.res)
 
